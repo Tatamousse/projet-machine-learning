@@ -1,0 +1,10 @@
+data/*.csv
+submissions/*.csv
+processed/*.rds
+.Rhistory
+.RData
+.Ruserdata
+.Rproj.user/
+*.Rproj
+.DS_Store
+Thumbs.db
