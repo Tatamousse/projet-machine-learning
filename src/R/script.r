@@ -27,6 +27,21 @@ hist(train$exam_score,
      border = "black",
      breaks = 30) #breaks définit le nombre de barres
 
+
+#BOXPLOT
+#configuration pour afficher 4 graphiques en même temps
+par(mfrow = c(2, 2))
+
+# Boxplot pour les variables numériques principales
+boxplot(train$study_hours, main = "Heures d'étude", col = "orange", horizontal = TRUE)
+boxplot(train$class_attendance, main = "Présence en classe", col = "lightgreen", horizontal = TRUE)
+boxplot(train$sleep_hours, main = "Heures de sommeil", col = "orchid", horizontal = TRUE)
+boxplot(train$age, main = "Âge", col = "gold", horizontal = TRUE)
+
+# Réinitialiser l'affichage
+par(mfrow = c(1, 1))
+
+#VALEURS MANQUANTES OU DOUBLONS
 #chercher les valeurs manquantes
 valeurs_manquantes <- colSums(is.na(train))
 
