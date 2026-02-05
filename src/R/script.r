@@ -11,12 +11,15 @@ print(paste("Test dimensions:", nrow(test), "lignes,", ncol(test), "colonnes"))
 
 #voir le type de variable
 str(train)
+str(test)
 
 #voir les premières lignes de train
 head(train)
+head(test)
 
 #résumé statistique complet
 summary(train)
+summary(test)
 
 #visualisation simple de exam_score
 hist(train$exam_score, 
@@ -32,7 +35,7 @@ hist(train$exam_score,
 #configuration pour afficher 4 graphiques en même temps
 par(mfrow = c(2, 2))
 
-# Boxplot pour les variables numériques principales
+#boxplot pour les variables numériques principales
 boxplot(train$study_hours, main = "Heures d'étude", col = "orange", horizontal = TRUE)
 boxplot(train$class_attendance, main = "Présence en classe", col = "lightgreen", horizontal = TRUE)
 boxplot(train$sleep_hours, main = "Heures de sommeil", col = "orchid", horizontal = TRUE)
@@ -41,17 +44,18 @@ boxplot(train$age, main = "Âge", col = "gold", horizontal = TRUE)
 # Réinitialiser l'affichage
 par(mfrow = c(1, 1))
 
+
 #VALEURS MANQUANTES OU DOUBLONS
 #chercher les valeurs manquantes
-valeurs_manquantes <- colSums(is.na(train))
+valeurs_manquantes_train <- colSums(is.na(train))
 
 #afficher celles qui ont un des problèmes
 print("Valeurs manquantes par colonne :")
-print(valeurs_manquantes[valeurs_manquantes > 0])
+print(valeurs_manquantes_train[valeurs_manquantes_train > 0])
 
 #recherche des doublons
-nb_doublons <- sum(duplicated(train))
-print(paste("Nombre de lignes dupliquées :", nb_doublons))
+nb_doublons_train <- sum(duplicated(train))
+print(paste("Nombre de lignes dupliquées (train.csv):", nb_doublons_train))
 
 #vérification de la cohérence
 print(paste("Note min :", min(train$exam_score)))
