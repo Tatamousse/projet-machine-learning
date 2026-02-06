@@ -61,6 +61,44 @@ print(paste("Nombre de lignes dupliquées (train.csv):", nb_doublons_train))
 print(paste("Note min :", min(train$exam_score)))
 print(paste("Note max :", max(train$exam_score)))
 
+# AUDIT DES MODALITÉS POUR LES VARIABLES TEXTE
+
+cat("\n TRAIN \n")
+
+vars_char_train <- names(train)[sapply(train, is.character)]
+
+for (col in vars_char_train) {
+  cat("\n==============================\n")
+  cat("Variable :", col, "\n")
+  cat("Nombre de modalités :", length(unique(train[[col]])), "\n\n")
+  
+  print(sort(unique(train[[col]])))
+}
+
+cat("\n==============================\n")
+
+cat("\n TEST \n")
+
+vars_char_test <- names(test)[sapply(test, is.character)]
+
+for (col in vars_char_test) {
+  cat("\n==============================\n")
+  cat("Variable :", col, "\n")
+  cat("Nombre de modalités :", length(unique(test[[col]])), "\n\n")
+  
+  print(sort(unique(test[[col]])))
+}
+
+# AUDIT OK : toutes les variables catégorielles sont propres et cohérentes
+# train / test (aucune modalité fantôme détectée)
+
+
+
+
+
+
+
+
 #TRAITEMENT DE DONNEES
 
 #on convertit les variables textuelles en variables numériques
@@ -68,53 +106,105 @@ print(paste("Note max :", max(train$exam_score)))
 #1. les variables ordinales
 
 #Fonction pour mapper les textes vers des chiffres
-convert_ordinal <- function(df) {
-  #Sleep Quality: Poor -> 1, Average -> 2, Good -> 3
-  df$sleep_quality <- as.numeric(factor(df$sleep_quality, 
-                                        levels = c("poor", "average", "good"), 
-                                        ordered = TRUE))
+convert_categorical <- function(df) {
   
-  #Exam Difficulty: Easy -> 1, Moderate -> 2, Hard -> 3
-  df$exam_difficulty <- as.numeric(factor(df$exam_difficulty, 
-                                          levels = c("easy", "moderate", "hard"), 
-                                          ordered = TRUE))
+  # ---------- ORDINALES ----------
   
-  #Facility Rating: Low -> 1, Medium -> 2, High -> 3
-  df$facility_rating <- as.numeric(factor(df$facility_rating, 
-                                          levels = c("low", "medium", "high"), 
-                                          ordered = TRUE))
+  # sleep_quality : poor < average < good
+  df$sleep_quality <- as.numeric(factor(
+    df$sleep_quality,
+    levels = c("poor", "average", "good"),
+    ordered = TRUE
+  ))
+  
+  # exam_difficulty : easy < moderate < hard
+  df$exam_difficulty <- as.numeric(factor(
+    df$exam_difficulty,
+    levels = c("easy", "moderate", "hard"),
+    ordered = TRUE
+  ))
+  
+  # facility_rating : low < medium < high
+  df$facility_rating <- as.numeric(factor(
+    df$facility_rating,
+    levels = c("low", "medium", "high"),
+    ordered = TRUE
+  ))
+  
+  
+  # ---------- NOMINALES (encodage FIXE) ----------
+  
+  # gender
+  df$gender <- as.numeric(factor(
+    df$gender,
+    levels = c("female", "male", "other")
+  ))
+  
+  # course
+  df$course <- as.numeric(factor(
+    df$course,
+    levels = c("ba", "b.com", "b.sc", "b.tech", "bba", "bca", "diploma")
+  ))
+  
+  # internet_access
+  df$internet_access <- as.numeric(factor(
+    df$internet_access,
+    levels = c("no", "yes")
+  ))
+  
+  # study_method
+  df$study_method <- as.numeric(factor(
+    df$study_method,
+    levels = c(
+      "coaching",
+      "group study",
+      "mixed",
+      "online videos",
+      "self-study"
+    )
+  ))
+  
+  
   return(df)
 }
-
 #On applique la transformation sur train et test
-train <- convert_ordinal(train)
-test <- convert_ordinal(test)
+train <- convert_categorical(train)
+test <- convert_categorical(test)
 
-#2.Les variables nominales (Gender, Course, Study_method, Internet_access)
-
-#On transforme simplement les chaines de caractères en "Facteurs"
-cols_nominales <- c("gender", "course", "study_method", "internet_access")
-
-for(col in cols_nominales) {
-  train[[col]] <- as.factor(train[[col]])
-  test[[col]] <- as.factor(test[[col]])
-}
 
 #Vérifier si toutes les variables sont factor ou num
 str(train)
+str(test)
 
 #NORMALISATION (Centrer-Réduire)
 
 #On liste les colonnes purement numériques
 vars_a_normaliser <- c("age", "study_hours", "class_attendance", "sleep_hours")
 
-# On applique la fonction scale()
-train[vars_a_normaliser] <- scale(train[vars_a_normaliser])
-test[vars_a_normaliser]  <- scale(test[vars_a_normaliser])
+# Calcul des moyennes et écarts-types SUR LE TRAIN
+means <- sapply(train[vars_a_normaliser], mean)
+sds   <- sapply(train[vars_a_normaliser], sd)
+
+# Normalisation du train
+train[vars_a_normaliser] <- sweep(train[vars_a_normaliser], 2, means, "-")
+train[vars_a_normaliser] <- sweep(train[vars_a_normaliser], 2, sds, "/")
+
+# Normalisation du test AVEC les stats du train
+test[vars_a_normaliser] <- sweep(test[vars_a_normaliser], 2, means, "-")
+test[vars_a_normaliser] <- sweep(test[vars_a_normaliser], 2, sds, "/")
 
 #Vérification rapide (la moyenne de study_hours doit être proche de 0)
-print("Vérification normalisation: Moyenne study_hours:")
+print("Vérification normalisation: \n Moyenne study_hours:")
 print(mean(train$study_hours))
+print("écart type study_hours:")
+print(sd(train$study_hours)) 
+
+
+
+
+
+
+
 
 #MODELISATION NAÏVE AVEC VALIDATION CROISÉE
 
