@@ -282,7 +282,10 @@ generate_submission <- function(model, filename) {
 
 # RIDGE (Alpha = 0)
 print("--- Entraînement RIDGE ---")
-grid_ridge <- expand.grid(alpha = 0, lambda = seq(0.001, 1, length = 20))
+grid_ridge <- expand.grid(
+  alpha = 0,
+  lambda = 10^seq(-4, 2, length = 50)
+)
 
 set.seed(42)
 model_ridge <- train(exam_score ~ . -id, 
@@ -296,7 +299,10 @@ generate_submission(model_ridge, "../../submissions/submission_ridge.csv") ##SCO
 
 # LASSO (Alpha = 1)
 print("--- Entraînement LASSO ---")
-grid_lasso <- expand.grid(alpha = 1, lambda = seq(0.0001, 0.1, length = 20))
+grid_lasso <- expand.grid(
+  alpha = 1,
+  lambda = 10^seq(-4, 2, length = 50)
+)
 
 set.seed(42)
 model_lasso <- train(exam_score ~ . -id, 
@@ -311,8 +317,10 @@ generate_submission(model_lasso, "../../submissions/submission_lasso.csv") ##SCO
 # ELASTIC NET (Alpha variable)
 print("--- Entraînement ELASTIC NET ---")
 # On teste des alpha entre 0.1 et 0.9 (le mix) et plusieurs lambdas
-grid_enet <- expand.grid(alpha = seq(0.1, 0.9, length = 5), 
-                         lambda = seq(0.001, 0.5, length = 10))
+grid_enet <- expand.grid(
+  alpha  = seq(0, 1, by = 0.1),
+  lambda = 10^seq(-4, 2, length = 50)
+)
 
 set.seed(42)
 model_enet <- train(exam_score ~ . -id, 
