@@ -130,30 +130,24 @@ convert_categorical <- function(df) {
     levels = c("low", "medium", "high"),
     ordered = TRUE
   ))
+  # ---------- NOMINALES ----------
   
-  
-  # ---------- NOMINALES (encodage FIXE) ----------
-  
-  # gender
-  df$gender <- as.numeric(factor(
+  df$gender <- factor(
     df$gender,
     levels = c("female", "male", "other")
-  ))
+  )
   
-  # course
-  df$course <- as.numeric(factor(
+  df$course <- factor(
     df$course,
     levels = c("ba", "b.com", "b.sc", "b.tech", "bba", "bca", "diploma")
-  ))
+  )
   
-  # internet_access
-  df$internet_access <- as.numeric(factor(
+  df$internet_access <- factor(
     df$internet_access,
     levels = c("no", "yes")
-  ))
+  )
   
-  # study_method
-  df$study_method <- as.numeric(factor(
+  df$study_method <- factor(
     df$study_method,
     levels = c(
       "coaching",
@@ -162,8 +156,7 @@ convert_categorical <- function(df) {
       "online videos",
       "self-study"
     )
-  ))
-  
+  )
   
   return(df)
 }
@@ -227,18 +220,8 @@ print(paste("RMSE Moyen (Naïf - Cross Validation) :", round(rmse_naif, 4)))
 
 #on calcule le R²
 
-#on calcule la Somme des Carrés Résiduelle (RSS)
-#c'est la somme de vos erreurs au carré (ce que le modèle n'a pas compris)
-rss <- sum((predictions_val - val_set$exam_score)^2)
-
-#on calcule la Somme Totale des Carrés (TSS)
-#c'est la variance totale des vraies notes (l'écart par rapport à la moyenne générale)
-tss <- sum((val_set$exam_score - mean(val_set$exam_score))^2)
-
-# R² = 1 - (Erreur / Variance Totale)
-r_squared <- 1 - (rss / tss) #0.7772
-
-print(paste("Score R² (Validation) :", round(r_squared, 4)))
+r2_naif <- model_naif_cv$results$Rsquared
+print(paste("R² Moyen (Naïf - Cross Validation) :", round(r2_naif, 4)))
 
 #on affiche les coeff des variables dans la formule
 final_model_naif <- model_naif_cv$finalModel
@@ -261,6 +244,21 @@ submission <- data.frame(
 
 # 4. Sauvegarde en CSV
 write.csv(submission, "../../submissions/submission_naif.csv", row.names = FALSE) ## SCORE DU MODELE NAIF: 8.86871
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # On applique des pénalités sur les coefficients
 
