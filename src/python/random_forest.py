@@ -54,5 +54,5 @@ submission = pd.DataFrame({
     "exam_score": test_preds
 })
 
-submission.to_csv("submission_random_forest.csv", index=False)
+submission.to_csv("../../submissions/submission_random_forest.csv", index=False)
 print("submission_random_forest.csv généré") # SCORE KAGGLE: 8.91147
