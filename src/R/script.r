@@ -192,6 +192,23 @@ print(mean(train$study_hours))
 print("écart type study_hours:")
 print(sd(train$study_hours)) 
 
+# EXPORT DES DONNÉES POST-TRAITEMENT
+
+write.csv(
+  train,
+  "../../data/train_processed.csv",
+  row.names = FALSE
+)
+
+write.csv(
+  test,
+  "../../data/test_processed.csv",
+  row.names = FALSE
+)
+
+cat("Données post-traitées exportées pour Python\n")
+
+
 
 
 
