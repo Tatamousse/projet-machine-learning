@@ -73,5 +73,5 @@ submission = pd.DataFrame({
     "exam_score": test_preds
 })
 
-submission.to_csv("submission_decision_tree.csv", index=False)
+submission.to_csv("../../submissions/submission_decision_tree.csv", index=False)
 print("submission_decision_tree.csv généré") # SCORE KAGGLE: 9.61357
