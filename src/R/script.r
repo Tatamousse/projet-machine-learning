@@ -404,3 +404,59 @@ print(model_enet$bestTune)
 #print(model_svr)
 
 #LE SVR EST TROP DEMANDANT PUISQUE LES DONNEES SONT TROP GRANDES (complexité O(n²))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# MOYENNE DE 2 ELASTIC NET AVEC SEEDS DIFFERENTS
+
+
+# --- Entraînement avec 2 seeds différentes ---
+set.seed(42)
+model_enet1 <- train(exam_score ~ . - id, data = train, method = "glmnet", trControl = control, tuneGrid = grid_enet)
+set.seed(123)
+model_enet2 <- train(exam_score ~ . - id, data = train, method = "glmnet", trControl = control, tuneGrid = grid_enet)
+
+# --- Prédiction sur TRAIN pour calculer métriques ---
+pred_train1 <- predict(model_enet1, newdata = train)
+pred_train2 <- predict(model_enet2, newdata = train)
+
+# Moyenne des prédictions
+pred_train_avg <- (pred_train1 + pred_train2) / 2
+
+# RMSE et R² moyen
+rmse_avg <- sqrt(mean((train$exam_score - pred_train_avg)^2))
+r2_avg   <- 1 - sum((train$exam_score - pred_train_avg)^2) / sum((train$exam_score - mean(train$exam_score))^2)
+
+cat("\n=== Moyenne 2xElastic Net ===\n")
+cat("RMSE sur train :", round(rmse_avg, 4), "\n")
+cat("R² sur train   :", round(r2_avg, 4), "\n")
+
+# --- Prédiction sur TEST pour soumission ---
+pred_test1 <- predict(model_enet1, newdata = test)
+pred_test2 <- predict(model_enet2, newdata = test)
+
+pred_test_avg <- (pred_test1 + pred_test2) / 2
+
+# Recadrage entre 0 et 100
+pred_test_avg <- ifelse(pred_test_avg < 0, 0, pred_test_avg)
+pred_test_avg <- ifelse(pred_test_avg > 100, 100, pred_test_avg)
+
+# Création du CSV
+submission_avg <- data.frame(
+  id = test$id,
+  exam_score = pred_test_avg
+)
+
+write.csv(submission_avg, "../../submissions/submission_enet_avg.csv", row.names = FALSE)
+cat("Fichier submission_enet_avg.csv généré \n")
