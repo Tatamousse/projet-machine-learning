@@ -37,14 +37,19 @@ dtest  = xgb.DMatrix(X_test)
 # 4. Paramètres XGBoost (CPU hist – RAPIDE & STABLE)
 params = {
     "objective": "reg:squarederror",
-    "tree_method": "hist",   # compatible partout
+    "tree_method": "hist",
     "eval_metric": "rmse",
-    "learning_rate": 0.05,
-    "max_depth": 8,
-    "subsample": 0.8,
-    "colsample_bytree": 0.8,
+
+    "learning_rate": 0.04903521267559334,
+    "max_depth": 5,
+    "subsample": 0.8539559833318924,
+    "colsample_bytree": 0.8428445166723066,
+    "min_child_weight": 6,
+    "gamma": 0.9942170069541861,
+
     "seed": 42
 }
+
 
 evals = [(dtrain, "train"), (dval, "val")]
 
