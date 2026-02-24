@@ -47,4 +47,4 @@ submission = pd.DataFrame({
 })
 submission.to_csv("../../submissions/submission_svr_gpu_final.csv", index=False)
 
-print("\nsubmission_svr_gpu_final.csv généré")
+print("\nsubmission_svr_gpu_final.csv généré") #SCORE KAGGLE: 9.1
