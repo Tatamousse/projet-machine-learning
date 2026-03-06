@@ -1,11 +1,6 @@
 import numpy as np
 import pandas as pd
 
-# =============================================================================
-# FEATURE ENGINEERING
-# À exécuter après le script R (qui génère train_processed.csv / test_processed.csv)
-# Génère train_fe.csv et test_fe.csv à utiliser dans tous tes modèles
-# =============================================================================
 
 train = pd.read_csv("../../data/train_processed.csv")
 test  = pd.read_csv("../../data/test_processed.csv")

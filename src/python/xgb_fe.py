@@ -34,7 +34,7 @@ dtrain = xgb.DMatrix(X_train, label=y_train)
 dval   = xgb.DMatrix(X_val, label=y_val)
 dtest  = xgb.DMatrix(X_test)
 
-# 4. Paramètres XGBoost (CPU hist – RAPIDE & STABLE)
+# 4. Paramètres XGBoost
 params = {
     "objective": "reg:squarederror",
     "tree_method": "hist",
