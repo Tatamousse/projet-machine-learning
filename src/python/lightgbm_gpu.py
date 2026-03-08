@@ -40,7 +40,6 @@ for params in ParameterGrid(param_grid):
         learning_rate=params["learning_rate"],
         reg_lambda=params["reg_lambda"],
         objective="regression",
-        device="gpu",
         random_state=42
     )
 
@@ -61,24 +60,19 @@ for params in ParameterGrid(param_grid):
         best_model = model
 
 print("\nBEST PARAMS:", best_params)
-print("BEST RMSE on validation:", best_rmse)
+print("BEST RMSE on validation:", best_rmse)  #RMSE=8.7480
 
 # 6. Entraînement final sur tout le train
 final_model = lgb.LGBMRegressor(
-    n_estimators=2000,
+    n_estimators=best_model.best_iteration_,  # on utilise le nombre d'arbres optimal trouvé
     max_depth=best_params["max_depth"],
     learning_rate=best_params["learning_rate"],
     reg_lambda=best_params["reg_lambda"],
     objective="regression",
-    device="gpu",
     random_state=42
 )
 
-final_model.fit(
-    X, y,
-    eval_metric="rmse",
-    callbacks=[lgb.early_stopping(stopping_rounds=50)],
-)
+final_model.fit(X, y)
 
 # 7. Prédiction test + export
 test_preds = final_model.predict(X_test)
@@ -90,4 +84,4 @@ submission = pd.DataFrame({
 })
 
 submission.to_csv("../../submissions/submission_lgbm_gpu.csv", index=False)
-print("\nsubmission_lgbm_gpu.csv généré")
+print("\nsubmission_lgbm_gpu.csv généré")#SCORE KAGGLE : 8.77324

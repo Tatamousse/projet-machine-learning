@@ -459,4 +459,4 @@ submission_avg <- data.frame(
 )
 
 write.csv(submission_avg, "../../submissions/submission_enet_avg.csv", row.names = FALSE)
-cat("Fichier submission_enet_avg.csv généré \n")
+cat("Fichier submission_enet_avg.csv généré \n")#SCORE KAGGLE: 8.76688
