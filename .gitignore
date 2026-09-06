@@ -1,10 +1,27 @@
+# Données et soumissions (volumineuses)
 data/*.csv
 submissions/*.csv
 processed/*.rds
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Artefacts d'entraînement
+catboost_info/
+*.deb
+lightgbm_info/
+mlruns/
+
+# R
 .Rhistory
 .RData
 .Ruserdata
 .Rproj.user/
 *.Rproj
+
+# Système
 .DS_Store
 Thumbs.db
